@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+  ~ HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+  ~
+  ~ (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+  ~
+  ~ This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+  ~  Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+  ~  to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+  ~  properly licensed third party, you do not have any rights to this code.
+  ~
+  ~  If this code is provided to you under the terms of the AGPLv3:
+  ~  (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+  ~  (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+  ~        LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+  ~  (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+  ~       FROM OR RELATED TO THE CODE; AND
+  ~  (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+  ~        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+  ~        DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+  ~        OR LOSS OR CORRUPTION OF DATA.
+-->
+<reposinfo>
+    <!-- <latest>http://s3.amazonaws.com/dev.hortonworks.com/SMM/smm_urlinfo.json</latest> -->
+    <os family="redhat-ppc7">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/centos7-ppc/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7-ppc</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="redhat7">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/centos7/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="ubuntu12">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/ubuntu12/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu12</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="ubuntu14">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/ubuntu14/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu14</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="ubuntu16">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/ubuntu16/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu16</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="amazonlinux2">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/amazonlinux2/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/amazonlinux2</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="debian9">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/debian9/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/debian9</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+    <os family="suse12">
+        <repo>
+            <baseurl>http://s3.amazonaws.com/dev.hortonworks.com/SMM/sles12/1.x/BUILDS/1.0.0.0</baseurl>
+            <repoid>SMM-1.0</repoid>
+            <reponame>SMM</reponame>
+        </repo>
+        <repo>
+            <baseurl>http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/sles12</baseurl>
+            <repoid>HDP-UTILS-1.1.0.22</repoid>
+            <reponame>HDP-UTILS</reponame>
+        </repo>
+    </os>
+</reposinfo>

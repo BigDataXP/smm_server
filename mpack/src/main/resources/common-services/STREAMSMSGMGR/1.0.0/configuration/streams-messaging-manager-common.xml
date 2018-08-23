@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  ~ HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+  ~
+  ~ (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+  ~
+  ~ This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+  ~  Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+  ~  to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+  ~  properly licensed third party, you do not have any rights to this code.
+  ~
+  ~  If this code is provided to you under the terms of the AGPLv3:
+  ~  (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+  ~  (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+  ~        LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+  ~  (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+  ~       FROM OR RELATED TO THE CODE; AND
+  ~  (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+  ~        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+  ~        DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+  ~        OR LOSS OR CORRUPTION OF DATA.
+-->
+<configuration>
+  <property>
+    <name>kafka.bootstrap.servers</name>
+    <value>localhost:6667</value>
+    <description>Kafka broker host with port number. Enter multiple Kafka broker hostnames in comma separated fashion</description>
+    <value-attributes>
+      <type>multiLine</type>
+    </value-attributes>
+    <depends-on>
+      <property>
+        <type>kafka-broker</type>
+        <name>port</name>
+      </property>
+    </depends-on>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>schema.registry.url</name>
+    <value>http://{{schema_registry_host}}:{{schema_registry_port}}/api/v1</value>
+    <description> Provide API URL for Schema Registry. e.g .http://localhost:7788/api/v1 </description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <depends-on>
+      <property>
+        <type>registry-common</type>
+        <name>port</name>
+      </property>
+    </depends-on>
+  </property>
+  <property>
+    <name>kafka.consumer.poll.timeout.ms</name>
+    <value>1000</value>
+    <description> Kafka Consumer Client's poll timeout in ms </description>
+  </property>
+
+  <!-- SMM's database properties -->
+  <property>
+    <name>database_name</name>
+    <value>streamsmsgmgr</value>
+    <display-name>Streams Messaging Manager storage database name</display-name>
+    <description>Streams Messaging Manager storage database name</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property require-input="true">
+    <name>streams_messaging_manager.storage.type</name>
+    <display-name>Streams Messaging Manager storage type</display-name>
+    <value>mysql</value>
+    <value-attributes>
+      <overridable>false</overridable>
+      <type>value-list</type>
+      <entries>
+        <entry>
+          <value>mysql</value>
+          <label>MYSQL</label>
+        </entry>
+        <entry>
+          <value>postgresql</value>
+          <label>POSTGRESQL</label>
+        </entry>
+        <entry>
+          <value>oracle</value>
+          <label>ORACLE</label>
+        </entry>
+      </entries>
+    </value-attributes>
+    <description>Type of the storage.
+      mysql installed by ambari is only for development and not suitable for production use cases due to it being not HA
+    </description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.storage.connector.user</name>
+    <value>streamsmsgmgr</value>
+    <display-name>Streams Messaging Manager storage user</display-name>
+    <description>Streams Messaging Manager storage user</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.storage.connector.password</name>
+    <value></value>
+    <property-type>PASSWORD</property-type>
+    <display-name>Streams Messaging Manager storage password</display-name>
+    <description>Password for the storage data base.</description>
+    <value-attributes>
+      <type>password</type>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property require-input="true">
+    <name>streams_messaging_manager.storage.connector.connectURI</name>
+    <value>jdbc:mysql://localhost:3306/streamsmsgmgr</value>
+    <display-name>Streams Messaging Manager storage connector url</display-name>
+    <description>Streams Messaging Manager storage connector url</description>
+    <on-ambari-upgrade add="false"/>
+    <depends-on>
+      <property>
+        <type>streams-messaging-manager-common</type>
+        <name>database_name</name>
+      </property>
+      <property>
+        <type>streams-messaging-manager-common</type>
+        <name>streams_messaging_manager.storage.type</name>
+      </property>
+    </depends-on>
+  </property>
+  <property required-input="false">
+    <name>streams_messaging_manager.storage.query.timeout</name>
+    <value>30</value>
+    <display-name>Streams Messaging Manager Storage Query Timeout</display-name>
+    <description> Query timeout in secs </description>
+  </property>
+
+  <!-- AMS related properites -->
+  <property required-input="false">
+    <name>ams.kafka.appid</name>
+    <display-name>AMS's Kafka Application Id</display-name>
+    <value>kafka_broker</value>
+    <description>AMS's Kafka Application Id</description>
+  </property>
+  <property required-input="true">
+    <name>ams.timeline.metrics.hosts</name>
+    <display-name>Ambari Metrics collector host</display-name>
+    <value>localhost</value>
+    <description>Ambari Metrics collector hostname</description>
+  </property>
+  <property required-input="false">
+    <name>ams.timeline.metrics.port</name>
+    <display-name>Ambari Metrics collector port</display-name>
+    <value>6188</value>
+    <description>Ambari Metrics Collector's port. Default is 6188</description>
+    <depends-on>
+      <property>
+        <type>ams-site</type>
+        <name>timeline.metrics.service.webapp.address</name>
+      </property>
+    </depends-on>
+  </property>
+  <property required-input="false">
+    <name>ams.timeline.metrics.protocol</name>
+    <value>{{ams_timeline_metrics_protocol}}</value>
+    <display-name>AMS's protocol</display-name>
+    <description>Ambari Metrics Collector's protocol</description>
+  </property>
+  <property>
+    <name>ams.timeline.metrics.truststore.password</name>
+    <value>{{ams_metric_truststore_password}}</value>
+    <description>Ambari Metrics Collector's truststore password</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>ams.timeline.metrics.truststore.type</name>
+    <value>{{ams_metric_truststore_type}}</value>
+    <description>Ambari Metric's truststore path</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>ams.timeline.metrics.truststore.path</name>
+    <value>{{ams_metric_truststore_path}}</value>
+    <description>Ambari Metrics Collector's truststore path. Custom truststore path for adding certificates which JRE disallows by default.
+      May need to be set up when importing SSL enabled Ambari clusters. e.g./etc/security/clientKeys/all.jks</description>
+   <on-ambari-upgrade add="false"/>
+  </property>
+  <property required-input="false">
+    <name>metrics.cache.refresh.interval.ms</name>
+    <value>300000</value>
+    <description>Refresh interval for data collection from Ambari Metrics Collector's cache</description>
+  </property>
+  <property required-input="false">
+    <name>consumer.group.refresh.interval.ms</name>
+    <value>300000</value>
+    <description>Refresh interval for consumer group's consumption</description>
+  </property>
+  <property required-input="false">
+    <name>inactive.producer.timeout.ms</name>
+    <value>1800000</value>
+    <description>Timeout in ms for Inactive producer</description>
+  </property>
+  <property required-input="false">
+    <name>inactive.group.timeout.ms</name>
+    <value>1800000</value>
+    <description>Timeout in ms for Inactive group</description>
+  </property>
+  <property required-input="false">
+    <name>metrics.fetcher.threads</name>
+    <value>20</value>
+    <description>Number of Metrics Fetcher Threads</description>
+  </property>
+
+  <!-- SMM's port info -->
+  <property>
+    <name>port</name>
+    <displayName>Port</displayName>
+    <value>8585</value>
+    <description>
+      The port on which server accepts connections.
+    </description>
+  </property>
+  <property>
+    <name>adminPort</name>
+    <displayName>Jetty Admin Port</displayName>
+    <value>8586</value>
+    <description>
+      The admin port for the server.
+    </description>
+  </property>
+
+  <property>
+    <name>streams_messaging_manager.ssl.port</name>
+    <value>8587</value>
+    <display-name>Streams Messaging Manager port (SSL)</display-name>
+    <description>HTTPS port Streams Messaging Manager node runs on when SSL is enabled</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.ssl.adminPort</name>
+    <value>8588</value>
+    <display-name>Streams Messaging Manager adminport (SSL)</display-name>
+    <description>HTTPS adminport Streams Messaging Manager node runs on when SSL is enabled</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+
+</configuration>

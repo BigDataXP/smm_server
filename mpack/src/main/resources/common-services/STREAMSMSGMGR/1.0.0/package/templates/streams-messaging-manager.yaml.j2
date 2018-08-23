@@ -1,0 +1,193 @@
+#
+# HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+#
+# (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+#
+# This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+# Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+# to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+# properly licensed third party, you do not have any rights to this code.
+#
+# If this code is provided to you under the terms of the AGPLv3:
+# (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+# (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+#    LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+# (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+#    FROM OR RELATED TO THE CODE; AND
+# (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+#    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+#    DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+#    OR LOSS OR CORRUPTION OF DATA.
+
+kafkaBootstrapServers: "{{kafka_bootstrap_servers}}"
+
+schemaRegistryUrl: "{{schema_registry_url}}"
+
+kafkaAdminClient:
+   properties:
+{% if kerberos_security_enabled %}
+    security.protocol: "SASL_PLAINTEXT"
+{% endif %}
+{% for key, value in kafkaAdminClient_dict.items() %}
+    {{key}}: {{value}}
+{% endfor %}
+
+
+kafkaConsumerClient:
+   poll.timeout.ms: "{{kafka_consumer_poll_timeout_ms}}"
+   properties:
+{% if kerberos_security_enabled %}
+    security.protocol: "SASL_PLAINTEXT"
+{% endif %}
+    # --- Apache Kafka consumer specific properties
+{% for key, value in kafkaConsumerClient_dict.items() %}
+    {{key}}: {{value}}
+{% endfor %}
+
+
+schemaRegistryClient:
+  properties:
+#   schema.registry.client.local.jars.path : "/tmp/schema-registry/local-jars"
+#   schema.registry.client.class.loader.cache.size : 1024
+#   schema.registry.client.class.loader.cache.expiry.interval : 3600
+#   schema.registry.client.schema.version.cache.size : 1024
+#   schema.registry.client.schema.version.cache.expiry.interval : 300
+#   schema.registry.client.schema.metadata.cache.expiry.interval : 300
+#   schema.registry.client.schema.text.cache.size : 1024
+#   schema.registry.client.schema.text.cache.expiry.interval : 300
+#   schema.registry.client.url.selector : "com.hortonworks.registries.schemaregistry.client.FailoverUrlSelector"
+#   schema.registry.client.ssl:
+#     protocol: SSL
+#     hostnameVerifierClass: com.hortonworks.registries.schemaregistry.avro.util.AcceptAllHostnameVerifier
+#     keyStoreType: JKS
+#     keyStorePath: ./client.jks
+#     keyStorePassword: clientpwd
+#     keyPassword:
+#     keyStoreProvider:
+#     keyManagerFactoryProvider:
+#     keyManagerFactoryAlgorithm:
+#     trustStoreType: JKS
+#     trustStorePath: ./client.jks
+#     trustStorePassword: clientpwd
+#     trustStoreProvider:
+#     trustManagerFactoryProvider:
+#     trustManagerFactoryAlgorithm:
+
+storageProviderConfiguration:
+ providerClass: "com.hortonworks.registries.storage.impl.jdbc.JdbcStorageManager"
+ properties:
+  db.type: "{{streams_messaging_manager_storage_type}}"
+  queryTimeoutInSecs: 30
+  db.properties:
+    dataSourceClassName: "{{streams_messaging_manager_storage_java_class}}"
+    dataSource.url: "{{streams_messaging_manager_storage_connector_connectorURI}}"
+    dataSource.user: "{{streams_messaging_manager_storage_connector_user}}"
+    dataSource.password: "{{streams_messaging_manager_storage_connector_password}}"
+
+swagger:
+  resourcePackage: com.hortonworks.smm.kafka.webservice.resources
+
+kafkaMetricsConfig:
+  metrics.fetcher.class: "com.hortonworks.smm.kafka.services.metric.ams.AMSMetricsFetcher"
+  metrics.cache.refresh.interval.ms: "{{metrics_cache_refresh_interval_ms}}"
+  consumer.group.refresh.interval.ms: "{{consumer_group_refresh_interval_ms}}"
+  inactive.producer.timeout.ms: "{{inactive_producer_timeout_ms}}"
+  inactive.group.timeout.ms: "{{inactive_group_timeout_ms}}"
+  metrics.fetcher.threads: {{metrics_fetcher_threads}}
+  properties:
+    ams.kafka.appid: "{{ams_kafka_appid}}"
+    ams.timeline.metrics.hosts: "{{ams_timeline_metrics_hosts}}"
+    ams.timeline.metrics.port: "{{ams_timeline_metrics_port}}"
+    ams.timeline.metrics.protocol: "{{ams_timeline_metrics_protocol}}"
+{% if ams_timeline_metrics_protocol == 'https' %}
+    ams.timeline.metrics.truststore.password: "{{ams_timeline_metrics_truststore_password}}"
+    ams.timeline.metrics.truststore.path: "{{ams_timeline_metrics_truststore_path}}"
+    ams.timeline.metrics.truststore.type: "{{ams_timeline_metrics_truststore_type}}"
+{% endif %}
+
+kafkaManagementConfig:
+  cache.refresh.interval.ms : "60000"
+
+{% if streams_messaging_manager_sso_enabled == true %}
+servletFilters:
+#Note that it is highly recommended to force ssl connections if you are using the jwt handler config below. Unsecured connections will expose jwt
+ - className: "com.hortonworks.registries.auth.server.AuthenticationFilter"
+   params:
+     type: "com.hortonworks.registries.auth.server.JWTAuthenticationHandler"
+     token.validity: {{streams_messaging_manager_authentication_sso_token_validity}}
+     authentication.provider.url: "{{streams_messaging_manager_authentication_provider_url}}"
+     public.key.pem: "{{streams_messaging_manager_public_key_pem}}"
+{% if streams_messaging_manager_sso_expected_jwt_audiences %}
+     streams_messaging_manager.expected.jwt.audiences: "{{streams_messaging_manager_sso_expected_jwt_audiences}}"
+{% endif %}
+{% if streams_messaging_manager_sso_jwt_cookie_name %}
+     streams_messaging_manager.jwt.cookie.name: "{{streams_messaging_manager_sso_jwt_cookie_name}}"
+{% endif %}
+{% if streams_messaging_manager_sso_cookie_path %}
+     streams_messaging_manager.cookie.path: "{{streams_messaging_manager_sso_cookie_path}}"
+{% endif %}
+{% if streams_messaging_manager_sso_cookie_domain %}
+     streams_messaging_manager.cookie.domain: "{{streams_messaging_manager_sso_cookie_domain}}"
+{% endif %}
+{% endif %}
+
+{% if "Yes" in ranger_kafka_plugin_enabled %}
+# ------------------------------------------------
+# Authorizer configuration
+# ------------------------------------------------
+authorizerConfiguration:
+ className: "com.hortonworks.smm.kafka.services.security.impl.DefaultSMMAuthorizer"
+ kafkaAuthorizerConfiguration:
+  className: "org.apache.ranger.authorization.kafka.authorizer.RangerKafkaAuthorizer"
+  properties:
+{%endif%}
+
+# To use Kafka's default zk based authorizer
+# kafkaAuthorizerConfiguration:
+#  className: "kafka.security.auth.SimpleAclAuthorizer"
+#  properties:
+#    zookeeper.connect: "localhost:2181"
+#    zookeeper.session.timeout.ms: "6000"
+#    zookeeper.connection.timeout.ms: "6000"
+#    super.users: "User:kafka"
+#    allow.everyone.if.no.acl.found: "false"
+
+server:
+  applicationConnectors:
+{% if streams_messaging_manager_ssl_enabled == false %}
+    - type: http
+      port: {{streams_messaging_manager_port}}
+{% else %}
+    - type: https
+      port: {{streams_messaging_manager_ssl_port}}
+      keyStorePath: {{streams_messaging_manager_keyStorePath}}
+      keyStorePassword: {{streams_messaging_manager_keyStorePassword}}
+      keyStoreType: {{streams_messaging_manager_keyStoreType}}
+      trustStorePath: {{streams_messaging_manager_trustStorePath}}
+      trustStorePassword: {{streams_messaging_manager_trustStorePassword}}
+      trustStoreType: {{streams_messaging_manager_trustStoreType}}
+      validateCerts: {{streams_messaging_manager_validateCerts}}
+      validatePeers: {{streams_messaging_manager_validatePeers}}
+{% endif %}
+
+  adminConnectors:
+{% if streams_messaging_manager_ssl_enabled == false %}
+    - type: http
+      port: {{streams_messaging_manager_admin_port}}
+{% else %}
+    - type: https
+      port: {{streams_messaging_manager_ssl_adminPort}}
+      keyStorePath: {{streams_messaging_manager_keyStorePath}}
+      keyStorePassword: {{streams_messaging_manager_keyStorePassword}}
+      keyStoreType: {{streams_messaging_manager_keyStoreType}}
+      trustStorePath: {{streams_messaging_manager_trustStorePath}}
+      trustStorePassword: {{streams_messaging_manager_trustStorePassword}}
+      trustStoreType: {{streams_messaging_manager_trustStoreType}}
+      validateCerts: {{streams_messaging_manager_validateCerts}}
+      validatePeers: {{streams_messaging_manager_validatePeers}}
+{% endif %}
+
+# Logging settings.
+# https://logback.qos.ch/manual/layouts.html#conversionWord
+logging:
+  {{streams_messaging_manager_log_template}}

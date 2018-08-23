@@ -1,0 +1,185 @@
+kafkaBootstrapServers: "__kafka_bootstrap_server__"
+
+schemaRegistryUrl: "__schema_registry_url__"
+
+kafkaAdminClient:
+  properties:
+#  reconnect.backoff.ms:
+#  reconnect.backoff.max.ms:
+#  retry.backoff.ms:
+#  connections.max.idle.ms:
+#  request.timeout.ms:
+#  metadata.max.age.ms:
+#  send.buffer.bytes:
+#  receive.buffer.bytes:
+#  metric.reporters:
+#  metrics.num.samples:
+#  metrics.sample.window.ms:
+#  metrics.recording.level:
+#  security.protocol:
+#  retries:
+
+kafkaConsumerClient:
+  poll.timeout.ms: 1000
+  properties:
+  # --- Apache Kafka consumer specific properties
+#
+#
+
+schemaRegistryClient:
+  properties:
+#   schema.registry.client.local.jars.path : "/tmp/schema-registry/local-jars"
+#   schema.registry.client.class.loader.cache.size : 1024
+#   schema.registry.client.class.loader.cache.expiry.interval : 3600
+#   schema.registry.client.schema.version.cache.size : 1024
+#   schema.registry.client.schema.version.cache.expiry.interval : 300
+#   schema.registry.client.schema.metadata.cache.expiry.interval : 300
+#   schema.registry.client.schema.text.cache.size : 1024
+#   schema.registry.client.schema.text.cache.expiry.interval : 300
+#   schema.registry.client.url.selector : "com.hortonworks.registries.schemaregistry.client.FailoverUrlSelector"
+#   schema.registry.client.ssl:
+#     protocol: SSL
+#     hostnameVerifierClass: com.hortonworks.registries.schemaregistry.avro.util.AcceptAllHostnameVerifier
+#     keyStoreType: JKS
+#     keyStorePath: ./client.jks
+#     keyStorePassword: clientpwd
+#     keyPassword:
+#     keyStoreProvider:
+#     keyManagerFactoryProvider:
+#     keyManagerFactoryAlgorithm:
+#     trustStoreType: JKS
+#     trustStorePath: ./client.jks
+#     trustStorePassword: clientpwd
+#     trustStoreProvider:
+#     trustManagerFactoryProvider:
+#     trustManagerFactoryAlgorithm:
+
+storageProviderConfiguration:
+ providerClass: "com.hortonworks.registries.storage.impl.memory.InMemoryStorageManager"
+
+swagger:
+  resourcePackage: com.hortonworks.smm.kafka.webservice.resources
+
+kafkaMetricsConfig:
+  metrics.fetcher.class: "com.hortonworks.smm.kafka.services.metric.MockMetricsFetcher"
+  metrics.cache.refresh.interval.ms: "300000"
+  consumer.group.refresh.interval.ms: "300000"
+  inactive.producer.timeout.ms: "1800000"
+  inactive.group.timeout.ms: "1800000"
+  metrics.fetcher.threads: 25
+  properties:
+    ams.kafka.appid: "kafka_broker"
+    ams.timeline.metrics.hosts: localhost
+    ams.timeline.metrics.port: 6188
+    ams.timeline.metrics.protocol: http
+    ams.timeline.metrics.truststore.password: bigdata
+    ams.timeline.metrics.truststore.path: /etc/security/clientKeys/all.jks
+    ams.timeline.metrics.truststore.type: jks
+
+kafkaManagementConfig:
+  cache.refresh.interval.ms : "3000"
+
+#servletFilters:
+#Note that it is highly recommended to force ssl connections if you are using the jwt handler config below. Unsecured connections will expose jwt
+# - className: "com.hortonworks.registries.auth.server.AuthenticationFilter"
+#   params:
+#     type: "com.hortonworks.registries.auth.server.JWTAuthenticationHandler"
+#     allowed.resources: "401.html,back-default.png,favicon.ico"
+#     authentication.provider.url: "https://localhost:8883/gateway/knoxsso/api/v1/websso"
+#     public.key.pem: "<public key corresponding to the PKI key pair of the token issuer>"
+
+# ------------------------------------------------
+# Authorizer configuration
+# ------------------------------------------------
+#authorizerConfiguration:
+# className: "com.hortonworks.smm.kafka.services.security.impl.DefaultSMMAuthorizer"
+# kafkaAuthorizerConfiguration:
+#  className: "org.apache.ranger.authorization.kafka.authorizer.RangerKafkaAuthorizer"
+#  properties:
+
+# To use Kafka's default zk based authorizer
+# kafkaAuthorizerConfiguration:
+#  className: "kafka.security.auth.SimpleAclAuthorizer"
+#  properties:
+#    zookeeper.connect: "localhost:2181"
+#    zookeeper.session.timeout.ms: "6000"
+#    zookeeper.connection.timeout.ms: "6000"
+#    super.users: "User:kafka"
+#    allow.everyone.if.no.acl.found: "false"
+
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 0
+  adminConnectors:
+    - type: http
+      port: 0
+
+# Above configuration for running http is fine for dev and testing.
+# For production setup, where UI app will hit apis through DPS it 
+# is strongly recommended to run https instead. Note that only
+# keyStorePath and keyStorePassword are mandatory properties. Values
+# for other properties are defaults
+#server:
+  #applicationConnectors:
+  #  - type: https
+  #    port: 8585
+  #    keyStorePath: ./conf/keystore.jks 
+  #    keyStorePassword: changeit
+  #    keyStoreType: JKS
+  #    keyStoreProvider:
+  #    trustStorePath: /path/to/file
+  #    trustStorePassword: changeit
+  #    trustStoreType: JKS
+  #    trustStoreProvider:
+  #    keyManagerPassword: changeit
+  #    needClientAuth: false
+  #    wantClientAuth:
+  #    certAlias: <alias>
+  #    crlPath: /path/to/file
+  #    enableCRLDP: false
+  #    enableOCSP: false
+  #    maxCertPathLength: (unlimited)
+  #    ocspResponderUrl: (none)
+  #    jceProvider: (none)
+  #    validateCerts: true
+  #    validatePeers: true
+  #    supportedProtocols: SSLv3
+  #    supportedCipherSuites: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  #    allowRenegotiation: true
+  #    endpointIdentificationAlgorithm: (none)
+ 
+  #adminConnectors:
+  #  - type: https
+  #    port: 8586
+  #    keyStorePath: ./conf/keystore.jks 
+  #    keyStorePassword: changeit 
+  #    keyStoreType: JKS
+  #    keyStoreProvider:
+  #    trustStorePath: /path/to/file
+  #    trustStorePassword: changeit
+  #    trustStoreType: JKS
+  #    trustStoreProvider:
+  #    keyManagerPassword: changeit
+  #    needClientAuth: false
+  #    wantClientAuth:
+  #    certAlias: <alias>
+  #    crlPath: /path/to/file
+  #    enableCRLDP: false
+  #    enableOCSP: false
+  #    maxCertPathLength: (unlimited)
+  #    ocspResponderUrl: (none)
+  #    jceProvider: (none)
+  #    validateCerts: true
+  #    validatePeers: true
+  #    supportedProtocols: SSLv3
+  #    supportedCipherSuites: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  #    allowRenegotiation: true
+  #    endpointIdentificationAlgorithm: (none)
+
+# Logging settings.
+logging:
+  level: INFO
+  loggers:
+    com.hortonworks.smm.kafka.webservice.common: DEBUG

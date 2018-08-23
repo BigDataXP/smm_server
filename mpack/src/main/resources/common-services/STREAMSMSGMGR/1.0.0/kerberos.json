@@ -1,0 +1,51 @@
+{
+  "services": [
+    {
+      "name": "STREAMSMSGMGR",
+      "identities": [
+        {
+          "name": "/spnego"
+        },
+        {
+          "name": "/smokeuser"
+        },
+        {
+          "name": "streams_messaging_manager_components",
+          "principal": {
+            "value": "${streams-messaging-manager-env/streams_messaging_manager_user}-${cluster_name|toLower()}@${realm}",
+            "type": "user",
+            "configuration": "streams-messaging-manager-env/streams_messaging_manager_principal_name"
+          },
+          "keytab": {
+            "file": "${keytab_dir}/streams_messaging_manager.service.keytab",
+            "owner": {
+              "name": "${streams-messaging-manager-env/streams_messaging_manager_user}",
+              "access": "r"
+            },
+            "group": {
+              "name": "${cluster-env/user_group}",
+              "access": ""
+            },
+            "configuration": "streams-messaging-manager-env/streams_messaging_manager_keytab"
+          }
+        }
+      ],
+      "components": [
+        {
+          "name": "STREAMSMSGMGR",
+          "identities": [
+            {
+              "name": "/spnego",
+              "principal": {
+                "configuration": "streams-messaging-manager-env/streams_messaging_manager_ui_principal_name"
+              },
+              "keytab": {
+                "configuration": "streams-messaging-manager-env/streams_messaging_manager_ui_keytab"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+  ~   HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+  ~
+  ~   (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+  ~
+  ~   This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+  ~   Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+  ~   to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+  ~   properly licensed third party, you do not have any rights to this code.
+  ~
+  ~   If this code is provided to you under the terms of the AGPLv3:
+  ~   (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+  ~   (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+  ~     LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+  ~   (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+  ~     FROM OR RELATED TO THE CODE; AND
+  ~   (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+  ~     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+  ~     DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+  ~     OR LOSS OR CORRUPTION OF DATA.
+  -->
+<metainfo>
+  <schemaVersion>2.0</schemaVersion>
+  <services>
+    <service>
+      <name>STREAMSMSGMGR</name>
+      <displayName>Streams Messaging Manager</displayName>
+      <comment>STREAMS MESSAGING MANAGER provides analysis of your kafka broker's health and performance across different clusters. </comment>
+      <version>1.0.0</version>
+      <components>
+        <component>
+
+          <name>STREAMSMSGMGR</name>
+          <displayName>Streams Messaging Manager</displayName>
+          <category>MASTER</category>
+          <cardinality>1</cardinality>
+          <versionAdvertised>false</versionAdvertised>
+
+          <commandScript>
+            <script>scripts/streams_messaging_manager_server.py</script>
+            <scriptType>PYTHON</scriptType>
+            <timeout>1200</timeout>
+          </commandScript>
+
+          <logs>
+            <log>
+              <logId>streams_messaging_manager_server_app</logId>
+              <primary>true</primary>
+            </log>
+          </logs>
+
+        </component>
+      </components>
+
+      <commandScript>
+        <script>scripts/service_check.py</script>
+        <scriptType>PYTHON</scriptType>
+        <timeout>300</timeout>
+      </commandScript>
+
+      <configuration-dependencies>
+        <config-type>streams-messaging-manager-common</config-type>
+        <config-type>streams-messaging-manager-env</config-type>
+        <config-type>streams-messaging-manager_jaas_conf</config-type>
+        <config-type>streams-messaging-manager-ssl-config</config-type>
+        <config-type>streams-messaging-manager-sso-config</config-type>
+        <config-type>ranger-kafka-plugin-properties</config-type>
+        <config-type>ranger-kafka-audit</config-type>
+        <config-type>ranger-kafka-policymgr-ssl</config-type>
+        <config-type>ranger-kafka-security</config-type>
+      </configuration-dependencies>
+
+      <restartRequiredAfterChange>true</restartRequiredAfterChange>
+
+      <themes>
+        <theme>
+          <fileName>theme.json</fileName>
+          <default>true</default>
+        </theme>
+      </themes>
+
+      <osSpecifics>
+        <osSpecific>
+          <osFamily>any</osFamily>
+          <packages>
+            <package>
+              <name>streams-messaging-manager</name>
+            </package>
+          </packages>
+        </osSpecific>
+      </osSpecifics>
+
+      <sso>
+        <supported>true</supported>
+        <enabledConfiguration>streams-messaging-manager-sso-config/streams_messaging_manager.sso.enabled</enabledConfiguration>
+      </sso>
+
+      <quickLinksConfigurations>
+        <quickLinksConfiguration>
+          <fileName>quicklinks.json</fileName>
+          <default>true</default>
+        </quickLinksConfiguration>
+      </quickLinksConfigurations>
+      <restartRequiredAfterChange>true</restartRequiredAfterChange>
+
+      <requiredServices>
+        <service>KAFKA</service>
+        <service>KNOX</service>
+        <service>AMBARI_METRICS</service>
+      </requiredServices>
+
+      <credential-store>
+        <supported>true</supported>
+        <enabled>true</enabled>
+      </credential-store>
+
+    </service>
+  </services>
+</metainfo>

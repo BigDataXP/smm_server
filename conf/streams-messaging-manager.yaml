@@ -1,0 +1,254 @@
+#
+# HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+# (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+# This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+# Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+# to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+# properly licensed third party, you do not have any rights to this code.
+# If this code is provided to you under the terms of the AGPLv3:
+# (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+# (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+# LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+# (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+# FROM OR RELATED TO THE CODE; AND
+# (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+# DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+# OR LOSS OR CORRUPTION OF DATA.
+#
+
+kafkaBootstrapServers: "127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094"
+
+schemaRegistryUrl: "http://localhost:9090/api/v1"
+
+kafkaAdminClient:
+  properties:
+#  reconnect.backoff.ms:
+#  reconnect.backoff.max.ms:
+#  retry.backoff.ms:
+#  connections.max.idle.ms:
+#  request.timeout.ms:
+#  metadata.max.age.ms:
+#  send.buffer.bytes:
+#  receive.buffer.bytes:
+#  metric.reporters:
+#  metrics.num.samples:
+#  metrics.sample.window.ms:
+#  metrics.recording.level:
+#  security.protocol:
+#  retries:
+
+kafkaConsumerClient:
+  poll.timeout.ms: 1000
+  properties:
+  # --- Apache Kafka consumer specific properties
+#
+#
+
+schemaRegistryClient:
+  properties:
+#   schema.registry.client.local.jars.path : "/tmp/schema-registry/local-jars"
+#   schema.registry.client.class.loader.cache.size : 1024
+#   schema.registry.client.class.loader.cache.expiry.interval : 3600
+#   schema.registry.client.schema.version.cache.size : 1024
+#   schema.registry.client.schema.version.cache.expiry.interval : 300
+#   schema.registry.client.schema.metadata.cache.expiry.interval : 300
+#   schema.registry.client.schema.text.cache.size : 1024
+#   schema.registry.client.schema.text.cache.expiry.interval : 300
+#   schema.registry.client.url.selector : "com.hortonworks.registries.schemaregistry.client.FailoverUrlSelector"
+#   schema.registry.client.ssl:
+#     protocol: SSL
+#     hostnameVerifierClass: com.hortonworks.registries.schemaregistry.avro.util.AcceptAllHostnameVerifier
+#     keyStoreType: JKS
+#     keyStorePath: ./client.jks
+#     keyStorePassword: clientpwd
+#     keyPassword:
+#     keyStoreProvider:
+#     keyManagerFactoryProvider:
+#     keyManagerFactoryAlgorithm:
+#     trustStoreType: JKS
+#     trustStorePath: ./client.jks
+#     trustStorePassword: clientpwd
+#     trustStoreProvider:
+#     trustManagerFactoryProvider:
+#     trustManagerFactoryAlgorithm:
+
+storageProviderConfiguration:
+ providerClass: "com.hortonworks.registries.storage.impl.jdbc.JdbcStorageManager"
+ properties:
+  db.type: "mysql"
+  queryTimeoutInSecs: 30
+  db.properties:
+    dataSourceClassName: "com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+    dataSource.url: "jdbc:mysql://localhost/streams_messaging_manager"
+    dataSource.user: "streams_messaging_manager_user"
+    dataSource.password: "streams_messaging_manager_password"
+
+# --
+# PostgreSQL based storage provider configuration
+# --
+#storageProviderConfiguration:
+# providerClass: "com.hortonworks.registries.storage.impl.jdbc.JdbcStorageManager"
+# properties:
+#   db.type: "postgresql"
+#   queryTimeoutInSecs: 30
+#   db.properties:
+#     dataSourceClassName: "org.postgresql.ds.PGSimpleDataSource"
+#     dataSource.url: "jdbc:postgresql://localhost/streams_messaging_manager"
+#     dataSource.user: "streams_messaging_manager_user"
+#     dataSource.password: "streams_messaging_manager_password"
+
+# --
+# Oracle based storage provider configuration
+# --
+#storageProviderConfiguration:
+# providerClass: "com.hortonworks.registries.storage.impl.jdbc.JdbcStorageManager"
+# properties:
+#   db.type: "oracle"
+#   queryTimeoutInSecs: 30
+#   db.properties:
+#     dataSourceClassName: "oracle.jdbc.pool.OracleDataSource"
+#     dataSource.url: "jdbc:oracle:thin:@localhost:1521/orclpdb1.localdomain"
+#     dataSource.user: "streams_messaging_manager_user"
+#     dataSource.password: "streams_messaging_manager_password"
+
+swagger:
+  resourcePackage: com.hortonworks.smm.kafka.webservice.resources
+
+kafkaMetricsConfig:
+  metrics.fetcher.class: "com.hortonworks.smm.kafka.services.metric.ams.AMSMetricsFetcher"
+  metrics.cache.refresh.interval.ms: "300000"
+  consumer.group.refresh.interval.ms: "300000"
+  # Minimum time span that is cached is 30 min. It is good to avoid configuring inactive producer timeout less than that
+  # time span as every request may go to the configured metric service(like AMS), which may introduce large latencies.
+  inactive.producer.timeout.ms: "1800000"
+  inactive.group.timeout.ms: "1800000"
+  metrics.fetcher.threads: 25
+  properties:
+    ams.kafka.appid: "kafka_broker"
+    ams.timeline.metrics.hosts: localhost
+    ams.timeline.metrics.port: 6188
+    ams.timeline.metrics.protocol: http
+    ams.timeline.metrics.truststore.password: bigdata
+    ams.timeline.metrics.truststore.path: /etc/security/clientKeys/all.jks
+    ams.timeline.metrics.truststore.type: jks
+
+kafkaManagementConfig:
+  cache.refresh.interval.ms : "60000"
+
+#servletFilters:
+#Note that it is highly recommended to force ssl connections if you are using the jwt handler config below. Unsecured connections will expose jwt
+# - className: "com.hortonworks.registries.auth.server.AuthenticationFilter"
+#   params:
+#     type: "com.hortonworks.registries.auth.server.JWTAuthenticationHandler"
+#     allowed.resources: "401.html,back-default.png,favicon.ico"
+#     authentication.provider.url: "https://localhost:8883/gateway/knoxsso/api/v1/websso"
+#     public.key.pem: "<public key corresponding to the PKI key pair of the token issuer>"
+
+# ------------------------------------------------
+# Authorizer configuration
+# ------------------------------------------------
+#authorizerConfiguration:
+# className: "com.hortonworks.smm.kafka.services.security.impl.DefaultSMMAuthorizer"
+# kafkaAuthorizerConfiguration:
+#  className: "org.apache.ranger.authorization.kafka.authorizer.RangerKafkaAuthorizer"
+#  properties:
+
+# To use Kafka's default zk based authorizer
+# kafkaAuthorizerConfiguration:
+#  className: "kafka.security.auth.SimpleAclAuthorizer"
+#  properties:
+#    zookeeper.connect: "localhost:2181"
+#    zookeeper.session.timeout.ms: "6000"
+#    zookeeper.connection.timeout.ms: "6000"
+#    super.users: "User:kafka"
+#    allow.everyone.if.no.acl.found: "false"
+
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8585
+  adminConnectors:
+    - type: http
+      port: 8586
+
+# Above configuration for running http is fine for dev and testing.
+# For production setup, where UI app will hit apis through DPS it 
+# is strongly recommended to run https instead. Note that only
+# keyStorePath and keyStorePassword are mandatory properties. Values
+# for other properties are defaults
+#server:
+  #applicationConnectors:
+  #  - type: https
+  #    port: 8585
+  #    keyStorePath: ./conf/keystore.jks 
+  #    keyStorePassword: changeit
+  #    keyStoreType: JKS
+  #    keyStoreProvider:
+  #    trustStorePath: /path/to/file
+  #    trustStorePassword: changeit
+  #    trustStoreType: JKS
+  #    trustStoreProvider:
+  #    keyManagerPassword: changeit
+  #    needClientAuth: false
+  #    wantClientAuth:
+  #    certAlias: <alias>
+  #    crlPath: /path/to/file
+  #    enableCRLDP: false
+  #    enableOCSP: false
+  #    maxCertPathLength: (unlimited)
+  #    ocspResponderUrl: (none)
+  #    jceProvider: (none)
+  #    validateCerts: true
+  #    validatePeers: true
+  #    supportedProtocols: SSLv3
+  #    supportedCipherSuites: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  #    allowRenegotiation: true
+  #    endpointIdentificationAlgorithm: (none)
+ 
+  #adminConnectors:
+  #  - type: https
+  #    port: 8586
+  #    keyStorePath: ./conf/keystore.jks 
+  #    keyStorePassword: changeit 
+  #    keyStoreType: JKS
+  #    keyStoreProvider:
+  #    trustStorePath: /path/to/file
+  #    trustStorePassword: changeit
+  #    trustStoreType: JKS
+  #    trustStoreProvider:
+  #    keyManagerPassword: changeit
+  #    needClientAuth: false
+  #    wantClientAuth:
+  #    certAlias: <alias>
+  #    crlPath: /path/to/file
+  #    enableCRLDP: false
+  #    enableOCSP: false
+  #    maxCertPathLength: (unlimited)
+  #    ocspResponderUrl: (none)
+  #    jceProvider: (none)
+  #    validateCerts: true
+  #    validatePeers: true
+  #    supportedProtocols: SSLv3
+  #    supportedCipherSuites: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  #    allowRenegotiation: true
+  #    endpointIdentificationAlgorithm: (none)
+
+# Logging settings.
+# https://logback.qos.ch/manual/layouts.html#conversionWord
+logging:
+  level: INFO
+  loggers:
+    com.hortonworks.smm.kafka.webservice.common: DEBUG
+    org.apache.kafka: INFO
+    io.swagger: ERROR
+  appenders:
+    - type: file
+      threshold: TRACE
+      logFormat: "%level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %msg %n"
+      currentLogFilename: ./logs/streams-messaging-manager.log
+      archivedLogFilenamePattern: ./logs/streams-messaging-manager-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 7
+      timeZone: UTC
+      maxFileSize: 50MB

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  ~   HORTONWORKS DATAPLANE SERVICE AND ITS CONSTITUENT SERVICES
+  ~
+  ~   (c) 2016-2018 Hortonworks, Inc. All rights reserved.
+  ~
+  ~   This code is provided to you pursuant to your written agreement with Hortonworks, which may be the terms of the
+  ~   Affero General Public License version 3 (AGPLv3), or pursuant to a written agreement with a third party authorized
+  ~   to distribute this code.  If you do not have a written agreement with Hortonworks or with an authorized and
+  ~   properly licensed third party, you do not have any rights to this code.
+  ~
+  ~   If this code is provided to you under the terms of the AGPLv3:
+  ~   (A) HORTONWORKS PROVIDES THIS CODE TO YOU WITHOUT WARRANTIES OF ANY KIND;
+  ~   (B) HORTONWORKS DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES WITH RESPECT TO THIS CODE, INCLUDING BUT NOT
+  ~     LIMITED TO IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+  ~   (C) HORTONWORKS IS NOT LIABLE TO YOU, AND WILL NOT DEFEND, INDEMNIFY, OR HOLD YOU HARMLESS FOR ANY CLAIMS ARISING
+  ~     FROM OR RELATED TO THE CODE; AND
+  ~   (D) WITH RESPECT TO YOUR EXERCISE OF ANY RIGHTS GRANTED TO YOU FOR THE CODE, HORTONWORKS IS NOT LIABLE FOR ANY
+  ~     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO,
+  ~     DAMAGES RELATED TO LOST REVENUE, LOST PROFITS, LOSS OF INCOME, LOSS OF BUSINESS ADVANTAGE OR UNAVAILABILITY,
+  ~     OR LOSS OR CORRUPTION OF DATA.
+  -->
+<configuration>
+
+  <property>
+    <name>streams_messaging_manager.ssl.isenabled</name>
+    <value>false</value>
+    <display-name>Enable SSL</display-name>
+    <description>
+       Check flag to enable SSL.
+    </description>
+    <value-attributes>
+      <type>boolean</type>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+
+  <!-- ssl properties -->
+  <property>
+    <name>streams_messaging_manager.keyStorePath</name>
+    <value/>
+    <display-name>KeyStore path</display-name>
+    <description>The full path and name of the keystore. e.g. /usr/smm/current/streams-messaging-manager/security/keystore.jks</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.keyStorePassword</name>
+    <value/>
+    <property-type>PASSWORD</property-type>
+    <display-name>KeyStore Password</display-name>
+    <description>The keystore password. It is blank by default but required if streams_messaging_manager.ssl.isenabled=true. </description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+      <type>password</type>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.keyStoreType</name>
+    <value/>
+    <display-name>Keystore Type</display-name>
+    <description>The keystore type. It is blank by default but required if streams_messaging_manager.ssl.isenabled=true. e.g. PKCS12 or JKS</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.trustStorePath</name>
+    <value/>
+    <display-name>TrustStore path</display-name>
+    <description>The full path and name of the truststore. e.g. /usr/smm/current/streams-messaging-manager/security/truststore.jks</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.trustStorePassword</name>
+    <value/>
+    <property-type>PASSWORD</property-type>
+    <display-name>TrustStore Password</display-name>
+    <description>The truststore password. It is blank by default but required if streams_messaging_manager.ssl.isenabled=true. </description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+      <type>password</type>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.trustStoreType</name>
+    <value/>
+    <display-name>TrustStore Type</display-name>
+    <description>The truststore type. It is blank by default but required if streams_messaging_manager.ssl.isenabled=true. e.g. PKCS12 or JKS</description>
+    <value-attributes>
+      <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.validateCerts</name>
+    <value>false</value>
+    <display-name>validateCerts</display-name>
+    <description>Whether or not to validate TLS certificates before starting. If enabled, it will refuse to start with expired or otherwise invalid certificates.</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
+    <name>streams_messaging_manager.validatePeers</name>
+    <value>false</value>
+    <display-name>validatePeers</display-name>
+    <description>Whether or not to validate TLS peer certificates.</description>
+    <on-ambari-upgrade add="false"/>
+  </property>
+
+</configuration>
